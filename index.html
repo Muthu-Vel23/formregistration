@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px #ccc;
+      width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .gender-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .terms label {
+      display: inline-flex;   /* keeps text and checkbox on same line */
+        /* vertically align */
+      gap: 6px;               /* space between text and box */
+      white-space: nowrap;    /* prevent line break */
+    }
+
+
+  </style>
+</head>
+<body>
+  <form id="registrationForm">
+    <h2>Registration Form</h2>
+
+    <!-- Full Name -->
+    <label>Full Name</label>
+    <input type="text" id="fullName" />
+    <div id="fullNameError" class="error"></div>
+
+    <!-- Email -->
+    <label>Email</label>
+    <input type="text" id="email" />
+    <div id="emailError" class="error"></div>
+
+    <!-- Phone -->
+    <label>Phone Number</label>
+    <input type="text" id="phone" />
+    <div id="phoneError" class="error"></div>
+
+    <!-- Zip Code -->
+    <label>Zip Code</label>
+    <input type="text" id="zip" />
+    <div id="zipError" class="error"></div>
+
+    <!-- DOB -->
+    <label>Date of Birth</label>
+    <input type="text" id="dob" placeholder="DD-MM-YYYY or YYYY-MM-DD"/>
+    <div id="dobError" class="error"></div>
+
+    <!-- Password -->
+    <label>Password</label>
+    <input type="password" id="password" />
+    <div id="passwordError" class="error"></div>
+
+    <!-- Confirm Password -->
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" />
+    <div id="confirmPasswordError" class="error"></div>
+
+    <!-- Gender -->
+    <label>Gender</label>
+    <div class="gender-options">
+      <label><input type="radio" name="gender" value="Male" /> Male</label>
+      <label><input type="radio" name="gender" value="Female" /> Female</label>
+      <label><input type="radio" name="gender" value="Other" /> Other</label>
+    </div>
+    <div id="genderError" class="error"></div>
+
+    <!-- Terms -->
+    <!-- Terms -->
+    <div class="terms">
+      <input type="checkbox" id="terms" />
+      <label for="terms">I agree to Terms & Conditions</label>
+    </div>
+    <div id="termsError" class="error"></div>
+
+
+    <!-- Submit -->
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault(); // Stop form submit
+      
+      let isValid = true;
+
+      // Full Name
+      const fullName = document.getElementById("fullName").value.trim();
+      const nameRegex = /^[A-Za-z ]{4,}$/;
+      if (!nameRegex.test(fullName)) {
+        document.getElementById("fullNameError").innerText = "Full name must be at least 4 characters and contain only letters/spaces.";
+        isValid = false;
+      } else {
+        document.getElementById("fullNameError").innerText = "";
+      }
+
+      // Email (only kpriet mail id)
+      const email = document.getElementById("email").value.trim();
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@kpriet\.ac\.in$/;
+      if (!emailRegex.test(email)) {
+        document.getElementById("emailError").innerText = "Only valid KPRIET email allowed.";
+        isValid = false;
+      } else {
+        document.getElementById("emailError").innerText = "";
+      }
+
+      // Phone
+      const phone = document.getElementById("phone").value.trim();
+      const phoneRegex = /^(\+91[-]?)?\d{10}$/;
+      if (!phoneRegex.test(phone)) {
+        document.getElementById("phoneError").innerText = "Enter valid phone (9876543210 or +91-9876543210).";
+        isValid = false;
+      } else {
+        document.getElementById("phoneError").innerText = "";
+      }
+
+      // Zip
+      const zip = document.getElementById("zip").value.trim();
+      const zipRegex = /^\d{6}$/;
+      if (!zipRegex.test(zip)) {
+        document.getElementById("zipError").innerText = "Zip code must be exactly 6 digits.";
+        isValid = false;
+      } else {
+        document.getElementById("zipError").innerText = "";
+      }
+
+      // DOB
+      const dob = document.getElementById("dob").value.trim();
+      const dobRegex = /^(\d{2}-\d{2}-\d{4}|\d{4}-\d{2}-\d{2})$/;
+      if (!dobRegex.test(dob)) {
+        document.getElementById("dobError").innerText = "Enter DOB in DD-MM-YYYY or YYYY-MM-DD.";
+        isValid = false;
+      } else {
+        let birthDate;
+        if (dob.indexOf("-") === 2) {
+          // DD-MM-YYYY
+          const [dd, mm, yyyy] = dob.split("-");
+          birthDate = new Date(`${yyyy}-${mm}-${dd}`);
+        } else {
+          // YYYY-MM-DD
+          birthDate = new Date(dob);
+        }
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        if (age < 18) {
+          document.getElementById("dobError").innerText = "You must be at least 18 years old.";
+          isValid = false;
+        } else {
+          document.getElementById("dobError").innerText = "";
+        }
+      }
+
+      // Password
+      const password = document.getElementById("password").value;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/;
+      if (!passwordRegex.test(password)) {
+        document.getElementById("passwordError").innerText = "Password must contain uppercase, lowercase, digit, special char, and be at least 8 chars.";
+        isValid = false;
+      } else {
+        document.getElementById("passwordError").innerText = "";
+      }
+
+      // Confirm Password
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      if (confirmPassword !== password || confirmPassword === "") {
+        document.getElementById("confirmPasswordError").innerText = "Passwords do not match.";
+        isValid = false;
+      } else {
+        document.getElementById("confirmPasswordError").innerText = "";
+      }
+
+      // Gender
+      const gender = document.querySelector('input[name="gender"]:checked');
+      if (!gender) {
+        document.getElementById("genderError").innerText = "Select a gender.";
+        isValid = false;
+      } else {
+        document.getElementById("genderError").innerText = "";
+      }
+
+      // Terms
+      const terms = document.getElementById("terms").checked;
+      if (!terms) {
+        document.getElementById("termsError").innerText = "You must agree to terms.";
+        isValid = false;
+      } else {
+        document.getElementById("termsError").innerText = "";
+      }
+
+      // Popup Success Message
+      if (isValid) {
+        alert("🎉 Form submitted successfully!");
+        document.getElementById("registrationForm").reset();
+      }
+    });
+  </script>
+</body>
+</html>
